@@ -6,6 +6,7 @@ import csv from "../assets/people-1000.csv?raw";
 export function Table() {
   const [sortColumn, setSortColumn] = useState(0);
   const [sortAsc, setSortAsc] = useState(true);
+  const [likes, setLikes] = useState<string[]>([]);
 
   const rows = csv
     .split("\n")
@@ -17,6 +18,8 @@ export function Table() {
         const quoted = line.match(/"(.*)"/)![1];
         cols = [...cols.slice(0, 8), quoted];
       }
+
+      cols.push(likes.includes(cols[0]) ? "♥️" : "♡");
 
       return cols;
     })
@@ -30,8 +33,11 @@ export function Table() {
 
       const lt = sortColumn === 0 ? parseInt(a) < parseInt(b) : a < b;
       const asc = lt ? -1 : 1;
+      // The hearts sort the wrong way.
+      // In a real app you would have a data model that isn't just strings
+      const ascSort = sortColumn === 9 ? !sortAsc : sortAsc;
 
-      if (sortAsc) {
+      if (ascSort) {
         return asc;
       } else {
         return -asc;
@@ -69,6 +75,7 @@ export function Table() {
               "Phone",
               "Date of birth",
               "Job title",
+              "Liked",
             ].map((text, index) => (
               <th onClick={() => sortBy(index)} key={"th-" + index}>
                 {text}
@@ -79,9 +86,22 @@ export function Table() {
         <tbody>
           {rows.map((cols, rowIndex) => (
             <tr key={`tr-${rowIndex}`}>
-              {cols.map((col, colIndex) => (
+              {cols.slice(0, -1).map((col, colIndex) => (
                 <td key={`td-${rowIndex}-${colIndex}`}>{col}</td>
               ))}
+
+              <td
+                onClick={() => {
+                  const index = cols[0];
+                  if (likes.includes(index)) {
+                    setLikes([...likes.filter((id) => id !== index)]);
+                  } else {
+                    setLikes([...likes, index]);
+                  }
+                }}
+              >
+                {cols[9]}
+              </td>
             </tr>
           ))}
         </tbody>

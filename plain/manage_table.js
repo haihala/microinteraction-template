@@ -1,13 +1,3 @@
-function sortTable(index) {
-  const element = document.querySelector("tbody");
-  element.innerHTML = "";
-
-  const ascending =
-    window.tableSort?.column === index ? !window.tableSort.ascending : true;
-
-  populateTable(element, index, ascending);
-}
-
 async function getTable() {
   if (!window.tableData) {
     const response = await fetch("/data/people-1000.csv");
@@ -15,58 +5,92 @@ async function getTable() {
 
     const rows = [];
 
-    txt.split("\n").forEach((line) => {
-      let cols = line.split(",");
-      if (cols.length > 9) {
-        // Title, last field, has a comma and is the only thing in
-        // quotes
-        cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
-      }
+    txt
+      .split("\n")
+      .filter((line) => line.length > 0)
+      .forEach((line) => {
+        let cols = line.split(",");
+        if (cols.length > 9) {
+          // Title, last field, has a comma and is the only thing in quotes
+          cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
+        }
 
-      rows.push(cols);
-    });
+        // Likes
+        cols.push(false);
+
+        rows.push(cols);
+      });
 
     window.tableData = rows;
   }
+
   return Promise.resolve(window.tableData);
 }
 
-function populateTable(bod, sortIndex, ascending) {
-  getTable().then((rows) => {
-    rows.sort((row1, row2) => {
-      let a = row1[sortIndex];
-      let b = row2[sortIndex];
+async function toggleLike(index) {
+  window.tableData[index][9] = !window.tableData[index][9];
+  await renderTable();
+}
 
-      const mappings = {
-        0: parseFloat,
-      };
+async function renderTable() {
+  const table = document.querySelector("tbody");
+  table.innerText = "";
 
-      const mapping = mappings[sortIndex];
-      if (mapping) {
-        a = mapping(a);
-        b = mapping(b);
-      }
+  for (const dataRow of await getTable()) {
+    const tableRow = table.insertRow();
+    dataRow.forEach((datapoint, index) => {
+      const cell = tableRow.insertCell(index);
 
-      if (ascending) {
-        return a > b;
+      const likesColumn = typeof datapoint === "boolean";
+      if (likesColumn) {
+        cell.innerHTML = datapoint ? "♥️" : "♡";
+        cell.onclick = () => toggleLike(dataRow[0] - 1);
       } else {
-        return a < b;
+        cell.innerHTML = datapoint;
       }
     });
+  }
+}
 
-    window.tableSort = {
-      column: sortIndex,
-      ascending,
+async function sortTable(column) {
+  const ascending =
+    window.tableSort?.column === column ? !window.tableSort.ascending : true;
+
+  const table = await getTable();
+
+  table.sort((row1, row2) => {
+    let a = row1[column];
+    let b = row2[column];
+
+    if (a === b) return 0;
+
+    const mappings = {
+      0: parseFloat,
+      9: (liked) => !liked,
     };
 
-    for (const dataRow of rows) {
-      const tableRow = bod.insertRow();
-      dataRow.forEach((datapoint, index) => {
-        const cell = tableRow.insertCell(index);
-        cell.innerHTML = datapoint;
-      });
+    const mapping = mappings[column];
+    if (mapping) {
+      a = mapping(a);
+      b = mapping(b);
+    }
+
+    const ord = a < b ? -1 : 1;
+
+    if (ascending) {
+      return ord;
+    } else {
+      return -ord;
     }
   });
+
+  window.tableData = table;
+  window.tableSort = {
+    column,
+    ascending,
+  };
+
+  await renderTable();
 }
 
 const thead = document.createElement("thead");
@@ -82,6 +106,7 @@ const headings = [
   "Phone",
   "Date of birth",
   "Job title",
+  "Liked",
 ];
 
 headings.forEach((text, index) => {
@@ -91,6 +116,5 @@ headings.forEach((text, index) => {
 
 const table = document.querySelector("table");
 table.appendChild(thead);
-const tbody = document.createElement("tbody");
-populateTable(tbody, 0, true);
-table.appendChild(tbody);
+table.appendChild(document.createElement("tbody"));
+renderTable();
