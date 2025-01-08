@@ -1,12 +1,21 @@
 // ?raw is a vite trick for reading a file as a string
 // File is a symlink to the one used for plain
-import { useState } from "react";
-import csv from "../assets/people-1000.csv?raw";
+import { useEffect, useState } from "react";
+import rawData from "../assets/people-1000.csv?raw";
 
 export function Table() {
   const [sortColumn, setSortColumn] = useState(0);
   const [sortAsc, setSortAsc] = useState(true);
   const [likes, setLikes] = useState<string[]>([]);
+  const [csv, setCSV] = useState("");
+
+  useEffect(() => {
+    // This simulates loading times
+    const timeout = setTimeout(() => {
+      setCSV(rawData);
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const rows = csv
     .split("\n")

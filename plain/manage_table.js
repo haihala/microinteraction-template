@@ -1,30 +1,39 @@
+async function fetchTable(resolve) {
+  const response = await fetch("/data/people-1000.csv");
+  const txt = await response.text();
+
+  const rows = [];
+
+  txt
+    .split("\n")
+    .filter((line) => line.length > 0)
+    .forEach((line) => {
+      let cols = line.split(",");
+      if (cols.length > 9) {
+        // Title, last field, has a comma and is the only thing in quotes
+        cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
+      }
+
+      // Likes
+      cols.push(false);
+
+      rows.push(cols);
+    });
+
+  window.tableData = rows;
+
+  resolve(window.tableData);
+}
+
 async function getTable() {
-  if (!window.tableData) {
-    const response = await fetch("/data/people-1000.csv");
-    const txt = await response.text();
-
-    const rows = [];
-
-    txt
-      .split("\n")
-      .filter((line) => line.length > 0)
-      .forEach((line) => {
-        let cols = line.split(",");
-        if (cols.length > 9) {
-          // Title, last field, has a comma and is the only thing in quotes
-          cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
-        }
-
-        // Likes
-        cols.push(false);
-
-        rows.push(cols);
-      });
-
-    window.tableData = rows;
+  if (window.tableData) {
+    return Promise.resolve(window.tableData);
+  } else {
+    // This simulates loading time
+    return new Promise((resolve) => {
+      setTimeout(() => fetchTable(resolve), 2000);
+    });
   }
-
-  return Promise.resolve(window.tableData);
 }
 
 async function toggleLike(index) {
@@ -96,28 +105,32 @@ async function sortTable(column) {
   await renderTable();
 }
 
-const thead = document.createElement("thead");
-const headRow = thead.insertRow();
+function generateTable() {
+  const thead = document.createElement("thead");
+  const headRow = thead.insertRow();
 
-const headings = [
-  "Index",
-  "User id",
-  "First name",
-  "Last name",
-  "Sex",
-  "Email",
-  "Phone",
-  "Date of birth",
-  "Job title",
-  "Liked",
-];
+  const headings = [
+    "Index",
+    "User id",
+    "First name",
+    "Last name",
+    "Sex",
+    "Email",
+    "Phone",
+    "Date of birth",
+    "Job title",
+    "Liked",
+  ];
 
-headings.forEach((text, index) => {
-  const cell = headRow.insertCell(index);
-  cell.outerHTML = `<th onclick="sortTable(${index})">${text}</th>`;
-});
+  headings.forEach((text, index) => {
+    const cell = headRow.insertCell(index);
+    cell.outerHTML = `<th onclick="sortTable(${index})">${text}</th>`;
+  });
 
-const table = document.querySelector("table");
-table.appendChild(thead);
-table.appendChild(document.createElement("tbody"));
-renderTable();
+  const table = document.querySelector("table");
+  table.appendChild(thead);
+  table.appendChild(document.createElement("tbody"));
+  renderTable();
+}
+
+generateTable();
