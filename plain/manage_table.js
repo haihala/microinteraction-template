@@ -28,7 +28,10 @@ async function getTable() {
 }
 
 async function toggleLike(index) {
-  window.tableData[index][9] = !window.tableData[index][9];
+  const row = window.tableData.find((item) => {
+    return item[0] == index + 1;
+  });
+  row[9] = !row[9];
   await renderTable();
 }
 
