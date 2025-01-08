@@ -13,6 +13,7 @@ export type RowData = {
 
 type Props = RowData & {
   onLike: () => void;
+  onEdit: () => void;
 };
 
 export function TableRow({
@@ -26,6 +27,7 @@ export function TableRow({
   jobTitle,
   liked,
   onLike,
+  onEdit,
 }: Props) {
   return (
     <details style={{ marginBottom: "1rem" }}>
@@ -56,7 +58,7 @@ export function TableRow({
           style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
         >
           <button onClick={() => onLike()}>{liked ? "♥️" : "♡"}</button>
-          <button onClick={() => alert("todo")}>Edit</button>
+          <button onClick={() => onEdit()}>Edit</button>
         </div>
       </div>
     </details>
