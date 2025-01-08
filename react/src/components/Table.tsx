@@ -1,12 +1,13 @@
 // ?raw is a vite trick for reading a file as a string
 // File is a symlink to the one used for plain
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import rawData from "../assets/people-1000.csv?raw";
+import { RowData, TableRow } from "./TableRow";
 
 export function Table() {
   const [sortColumn, setSortColumn] = useState(0);
   const [sortAsc, setSortAsc] = useState(true);
-  const [likes, setLikes] = useState<string[]>([]);
+  const [likes, setLikes] = useState<number[]>([]);
   const [csv, setCSV] = useState("");
 
   useEffect(() => {
@@ -28,20 +29,46 @@ export function Table() {
         cols = [...cols.slice(0, 8), quoted];
       }
 
-      cols.push(likes.includes(cols[0]) ? "♥️" : "♡");
+      const index = parseInt(cols[0]);
 
-      return cols;
+      const obj: RowData = {
+        index,
+        userId: cols[1],
+        firstName: cols[2],
+        lastName: cols[3],
+        sex: cols[4],
+        email: cols[5],
+        phone: cols[6],
+        birthDay: new Date(cols[7]),
+        jobTitle: cols[8],
+        liked: likes.includes(index),
+      };
+
+      return obj;
     })
     .sort((row1, row2) => {
-      const a = row1[sortColumn];
-      const b = row2[sortColumn];
+      const keys = [
+        "index",
+        "userId",
+        "firstName",
+        "lastName",
+        "sex",
+        "email",
+        "phone",
+        "birthDay",
+        "jobTitle",
+        "liked",
+      ] as const;
+      const sortKey: keyof RowData = keys[sortColumn];
+
+      const a = row1[sortKey];
+      const b = row2[sortKey];
 
       if (a === b) {
         return 0;
       }
 
-      const lt = sortColumn === 0 ? parseInt(a) < parseInt(b) : a < b;
-      const asc = lt ? -1 : 1;
+      const asc = a < b ? -1 : 1;
       // The hearts sort the wrong way.
       // In a real app you would have a data model that isn't just strings
       const ascSort = sortColumn === 9 ? !sortAsc : sortAsc;
@@ -93,25 +120,19 @@ export function Table() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((cols, rowIndex) => (
-            <tr key={`tr-${rowIndex}`}>
-              {cols.slice(0, -1).map((col, colIndex) => (
-                <td key={`td-${rowIndex}-${colIndex}`}>{col}</td>
-              ))}
-
-              <td
-                onClick={() => {
-                  const index = cols[0];
-                  if (likes.includes(index)) {
-                    setLikes([...likes.filter((id) => id !== index)]);
-                  } else {
-                    setLikes([...likes, index]);
-                  }
-                }}
-              >
-                {cols[9]}
-              </td>
-            </tr>
+          {rows.map((rowProps, rowIndex) => (
+            <React.Fragment key={rowIndex}>
+              <TableRow
+                {...rowProps}
+                onLike={() =>
+                  setLikes(
+                    likes.includes(rowProps.index)
+                      ? likes.filter((id) => id !== rowProps.index)
+                      : [...likes, rowProps.index],
+                  )
+                }
+              />
+            </React.Fragment>
           ))}
         </tbody>
       </table>
