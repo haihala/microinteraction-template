@@ -71,12 +71,10 @@ function tableRow(dataRow) {
   summary.innerHTML = `${lastName}, ${firstName}`;
   details.appendChild(summary);
 
-  const content = document.createElement("div");
-  content.classList.add("table-row-content");
-  const headers = document.createElement("div");
-  headers.classList.add("table-row-headers");
-  const values = document.createElement("div");
-  values.classList.add("table-row-values");
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("table-row-wrapper");
+  const grid = document.createElement("div");
+  grid.classList.add("table-row-data");
   for (const [title, value] of [
     ["User id", userId],
     ["Job title", jobTitle],
@@ -87,11 +85,11 @@ function tableRow(dataRow) {
   ]) {
     const label = document.createElement("span");
     label.innerHTML = title;
-    headers.appendChild(label);
+    grid.appendChild(label);
 
     const val = document.createElement("span");
     val.innerHTML = value;
-    values.appendChild(val);
+    grid.appendChild(val);
   }
 
   const buttons = document.createElement("div");
@@ -106,10 +104,9 @@ function tableRow(dataRow) {
   editButton.onclick = () => alert("todo");
   buttons.appendChild(editButton);
 
-  content.appendChild(headers);
-  content.appendChild(values);
-  content.appendChild(buttons);
-  details.appendChild(content);
+  wrapper.appendChild(grid);
+  wrapper.appendChild(buttons);
+  details.appendChild(wrapper);
 
   return details;
 }

@@ -32,27 +32,24 @@ export function TableRow({
       <summary>
         {lastName}, {firstName}
       </summary>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span>User id</span>
-          <span>Job title</span>
-          <span>Sex</span>
-          <span>Email</span>
-          <span>Phone</span>
-          <span>Date of birth</span>
-        </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 1,
+            display: "grid",
+            gridTemplateColumns: "20rem auto",
           }}
         >
+          <span>User id</span>
           <span>{userId}</span>
+          <span>Job title</span>
           <span>{jobTitle}</span>
+          <span>Sex</span>
           <span>{sex}</span>
+          <span>Email</span>
           <span>{email}</span>
+          <span>Phone</span>
           <span>{phone}</span>
+          <span>Date of birth</span>
           <span>{birthDay.toDateString()}</span>
         </div>
         <div

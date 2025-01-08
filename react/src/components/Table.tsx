@@ -121,7 +121,7 @@ export function Table() {
           </button>
         ))}
       </div>
-      <div style={{ maxWidth: "100rem" }}>
+      <div style={{ maxWidth: "80rem" }}>
         {rows.map((rowProps, rowIndex) => (
           <React.Fragment key={rowIndex}>
             <TableRow

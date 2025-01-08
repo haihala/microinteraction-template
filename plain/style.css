@@ -31,32 +31,30 @@ footer {
     padding: 1rem;
 }
 
-details {
-    max-width: 100rem;
-    margin-bottom: 1rem;
-}
-
 .sort-button {
     margin: 0.5rem;
 }
 
-.table-row-content {
-    display: flex;
-    gap: 1rem;
+details {
+    max-width: 80rem;
+    margin-bottom: 1rem;
 }
 
-.table-row-headers,
-.table-row-values,
+.table-row-wrapper {
+    display: flex;
+    gap: 3rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.table-row-data {
+    display: grid;
+    grid-template-columns: 20rem auto;
+}
+
 .table-row-buttons {
     display: flex;
     flex-direction: column;
-}
-
-.table-row-values {
-    flex-grow: 1;
-}
-
-.table-row-buttons {
     gap: 0.5rem;
 }
 
