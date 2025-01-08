@@ -16,7 +16,6 @@ type Props = RowData & {
 };
 
 export function TableRow({
-  index,
   userId,
   firstName,
   lastName,
@@ -29,17 +28,40 @@ export function TableRow({
   onLike,
 }: Props) {
   return (
-    <tr>
-      <td>{index}</td>
-      <td>{userId}</td>
-      <td>{firstName}</td>
-      <td>{lastName}</td>
-      <td>{sex}</td>
-      <td>{email}</td>
-      <td>{phone}</td>
-      <td>{birthDay.toDateString()}</td>
-      <td>{jobTitle}</td>
-      <td onClick={() => onLike()}>{liked ? "♥️" : "♡"}</td>
-    </tr>
+    <details style={{ marginBottom: "1rem" }}>
+      <summary>
+        {lastName}, {firstName}
+      </summary>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span>User id</span>
+          <span>Job title</span>
+          <span>Sex</span>
+          <span>Email</span>
+          <span>Phone</span>
+          <span>Date of birth</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          }}
+        >
+          <span>{userId}</span>
+          <span>{jobTitle}</span>
+          <span>{sex}</span>
+          <span>{email}</span>
+          <span>{phone}</span>
+          <span>{birthDay.toDateString()}</span>
+        </div>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          <button onClick={() => onLike()}>{liked ? "♥️" : "♡"}</button>
+          <button onClick={() => alert("todo")}>Edit</button>
+        </div>
+      </div>
+    </details>
   );
 }

@@ -1,0 +1,69 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    margin: 1rem;
+    flex-grow: 1;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 40rem;
+}
+
+label {
+    padding-top: 1rem;
+}
+
+header {
+    background-color: rgb(200, 200, 240);
+    padding: 1rem;
+}
+
+footer {
+    background-color: rgb(230, 200, 200);
+    padding: 1rem;
+}
+
+details {
+    max-width: 100rem;
+    margin-bottom: 1rem;
+}
+
+.sort-button {
+    margin: 0.5rem;
+}
+
+.table-row-content {
+    display: flex;
+    gap: 1rem;
+}
+
+.table-row-headers,
+.table-row-values,
+.table-row-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-row-values {
+    flex-grow: 1;
+}
+
+.table-row-buttons {
+    gap: 0.5rem;
+}
+
+.like-button:after {
+    content: "♡";
+}
+
+.like-button.liked:after {
+    content: "♥️";
+}

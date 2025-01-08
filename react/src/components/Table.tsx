@@ -98,44 +98,45 @@ export function Table() {
           here (people-1000)
         </a>
       </p>
-      <table>
-        <thead>
-          <tr>
-            {[
-              "Index",
-              "User id",
-              "First name",
-              "Last name",
-              "Sex",
-              "Email",
-              "Phone",
-              "Date of birth",
-              "Job title",
-              "Liked",
-            ].map((text, index) => (
-              <th onClick={() => sortBy(index)} key={"th-" + index}>
-                {text}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((rowProps, rowIndex) => (
-            <React.Fragment key={rowIndex}>
-              <TableRow
-                {...rowProps}
-                onLike={() =>
-                  setLikes(
-                    likes.includes(rowProps.index)
-                      ? likes.filter((id) => id !== rowProps.index)
-                      : [...likes, rowProps.index],
-                  )
-                }
-              />
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
+      <div>
+        Sort by:
+        {[
+          "Index",
+          "User id",
+          "First name",
+          "Last name",
+          "Sex",
+          "Email",
+          "Phone",
+          "Date of birth",
+          "Job title",
+          "Liked",
+        ].map((text, index) => (
+          <button
+            onClick={() => sortBy(index)}
+            key={text}
+            style={{ margin: "0.5rem" }}
+          >
+            {text}
+          </button>
+        ))}
+      </div>
+      <div style={{ maxWidth: "100rem" }}>
+        {rows.map((rowProps, rowIndex) => (
+          <React.Fragment key={rowIndex}>
+            <TableRow
+              {...rowProps}
+              onLike={() =>
+                setLikes(
+                  likes.includes(rowProps.index)
+                    ? likes.filter((id) => id !== rowProps.index)
+                    : [...likes, rowProps.index],
+                )
+              }
+            />
+          </React.Fragment>
+        ))}
+      </div>
     </>
   );
 }
