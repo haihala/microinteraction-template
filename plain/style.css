@@ -65,3 +65,23 @@ details {
 .like-button.liked:after {
     content: "♥️";
 }
+
+dialog {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    padding: 20px;
+}
+
+dialog::backdrop {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+dialog form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+dialog form input[type="submit"] {
+    grid-column: 1 / 3;
+}

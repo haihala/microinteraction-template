@@ -6,6 +6,7 @@
     <title></title>
     <link href="./style.css" rel="stylesheet" />
     <script defer src="./manage_table.js"></script>
+    <script defer src="./edit_modal.js"></script>
   </head>
   <body>
     <header>
@@ -21,6 +22,28 @@
           >here (people-1000)</a
         >
       </p>
+      <dialog>
+        <h1>Editing user xxx</h1>
+        <form>
+          <span>User id</span>
+          <input name="userId" />
+          <span>First name</span>
+          <input name="firstName" />
+          <span>Last name</span>
+          <input name="lastName" />
+          <span>Job title</span>
+          <input name="jobTitle" />
+          <span>Sex</span>
+          <input name="sex" />
+          <span>Phone</span>
+          <input name="phone" />
+          <span>Email</span>
+          <input name="email" />
+          <span>Date of birth</span>
+          <input type="date" name="birthDay" />
+          <input type="submit" value="Save" />
+        </form>
+      </dialog>
     </main>
     <footer>
       <p>Footer of the page</p>

@@ -5,7 +5,8 @@ async function fetchTable(resolve) {
     .map((line) => {
       let cols = line.split(",");
       if (cols.length > 9) {
-        // Title, last field, has a comma and is the only thing in quotes
+        // Job title has a comma and is in quotes
+        // It's the last field
         cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
       }
 
@@ -23,11 +24,17 @@ async function fetchTable(resolve) {
       };
     });
 
+  window.tableSort = {
+    column: 0,
+    ascending: true,
+  };
+
   resolve(window.tableData);
 }
 
 async function getTable() {
   if (window.tableData) {
+    // Table data is stored in window to make sorting easier.
     return Promise.resolve(window.tableData);
   } else {
     // This simulates loading time
@@ -52,22 +59,13 @@ function toggleLike(index) {
 }
 
 function tableRow(dataRow) {
-  const {
-    index,
-    userId,
-    firstName,
-    lastName,
-    sex,
-    email,
-    phone,
-    birthDay,
-    jobTitle,
-  } = dataRow;
+  const { index, firstName, lastName } = dataRow;
 
   const details = document.createElement("details");
   details.id = `table-row-${index}`;
 
   const summary = document.createElement("summary");
+  summary.id = `name-${index}`;
   summary.innerHTML = `${lastName}, ${firstName}`;
   details.appendChild(summary);
 
@@ -75,20 +73,21 @@ function tableRow(dataRow) {
   wrapper.classList.add("table-row-wrapper");
   const grid = document.createElement("div");
   grid.classList.add("table-row-data");
-  for (const [title, value] of [
-    ["User id", userId],
-    ["Job title", jobTitle],
-    ["Sex", sex],
-    ["Email", email],
-    ["Phone", phone],
-    ["Date of birth", birthDay.toDateString()],
+  for (const [title, key, transformer] of [
+    ["User id", "userId"],
+    ["Job title", "jobTitle"],
+    ["Sex", "sex"],
+    ["Email", "email"],
+    ["Phone", "phone"],
+    ["Date of birth", "birthDay", (d) => d.toDateString()],
   ]) {
     const label = document.createElement("span");
     label.innerHTML = title;
     grid.appendChild(label);
 
     const val = document.createElement("span");
-    val.innerHTML = value;
+    val.innerHTML = !transformer ? dataRow[key] : transformer(dataRow[key]);
+    val.id = `${key}-field-${index}`;
     grid.appendChild(val);
   }
 
@@ -101,7 +100,7 @@ function tableRow(dataRow) {
   buttons.appendChild(likeButton);
   const editButton = document.createElement("button");
   editButton.innerHTML = "Edit";
-  editButton.onclick = () => alert("todo");
+  editButton.onclick = () => openEditModal(index);
   buttons.appendChild(editButton);
 
   wrapper.appendChild(grid);
@@ -165,9 +164,9 @@ async function sortTable(column) {
   window.tableData = table;
   // Update DOM
   const domTable = document.querySelector("#data");
-  for (const dataRow of table.reverse()) {
+  for (const dataRow of table) {
     const tableRow = document.querySelector(`#table-row-${dataRow.index}`);
-    domTable.prepend(tableRow);
+    domTable.append(tableRow);
   }
 }
 
