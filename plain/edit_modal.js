@@ -56,15 +56,18 @@ function onEditModalSubmit(index) {
 
       const rowField = document.querySelector(`#${key}-field-${index}`);
 
+      user[key] = formField.value;
       if (key === "birthDay") {
         user[key] = new Date(formField.value);
-      } else {
-        user[key] = formField.value;
+      } else if (key === "supervisor") {
+        user[key] = parseInt(user[key]);
       }
 
       if (rowField) {
         if (key === "birthDay") {
           rowField.innerHTML = user[key].toDateString();
+        } else if (key === "supervisor") {
+          embedSupervisorButton(user[key], rowField);
         } else {
           rowField.innerHTML = user[key];
         }

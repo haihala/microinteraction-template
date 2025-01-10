@@ -68,6 +68,11 @@ function EditForm({ user, onSave }: FormProps) {
       >
         <span>User id</span>
         <input value={workUser.userId} onChange={change("userId")} />
+        <span>Supervisor</span>
+        <input
+          value={workUser.supervisor}
+          onChange={change("supervisor", parseInt)}
+        />
         <span>First name</span>
         <input value={workUser.firstName} onChange={change("firstName")} />
         <span>Last name</span>

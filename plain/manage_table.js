@@ -2,6 +2,21 @@ function formatEmployee(employee) {
   return `Employee ${employee.index} - ${employee.lastName}, ${employee.firstName}`;
 }
 
+function embedSupervisorButton(supervisor, container) {
+  container.innerHTML = "";
+  const employee = window.tableData.find((e) => e.index === supervisor);
+  if (employee) {
+    const button = document.createElement("button");
+    button.onclick = () => {
+      document.querySelector(`#table-row-${supervisor}`).scrollIntoView();
+    };
+    button.innerHTML = formatEmployee(employee);
+    container.appendChild(button);
+  } else {
+    container.innerHTML = "Nobody, they are at the top";
+  }
+}
+
 async function fetchTable(resolve) {
   window.tableData = (await (await fetch("/people-1000.csv")).text())
     .split("\n")
@@ -109,23 +124,7 @@ function tableRow(dataRow) {
         container.innerHTML = d.toDateString();
       },
     ],
-    [
-      "Supervisor",
-      "supervisor",
-      (supervisor, container) => {
-        const employee = window.tableData.find((e) => e.index === supervisor);
-        if (employee) {
-          const button = document.createElement("button");
-          button.onclick = () => {
-            document.querySelector(`#table-row-${supervisor}`).scrollIntoView();
-          };
-          button.innerHTML = formatEmployee(employee);
-          container.appendChild(button);
-        } else {
-          container.innerHTML = "Nobody, they are at the top";
-        }
-      },
-    ],
+    ["Supervisor", "supervisor", embedSupervisorButton],
   ]) {
     const label = document.createElement("span");
     label.innerHTML = title;
