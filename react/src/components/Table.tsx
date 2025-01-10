@@ -13,10 +13,10 @@ const sortKeys = [
   "sex",
   "email",
   "phone",
-  "birthDay",
+  "birthday",
   "jobTitle",
   "liked",
-] as const;
+] as (keyof RowData)[];
 
 export function Table() {
   const [sortKey, setSortColumn] = useState<keyof RowData>("index");
@@ -64,7 +64,7 @@ export function Table() {
               sex: cols[4],
               email: cols[5],
               phone: cols[6],
-              birthDay: new Date(cols[7]),
+              birthday: new Date(cols[7]),
               jobTitle: cols[8],
               liked: false,
               supervisor,
@@ -87,7 +87,7 @@ export function Table() {
         return 0;
       }
 
-      const asc = a < b ? -1 : 1;
+      const asc = (a || 0) < (b || 0) ? -1 : 1;
 
       if (sortAsc) {
         return asc;

@@ -6,10 +6,10 @@ export type RowData = {
   sex: string;
   email: string;
   phone: string;
-  birthDay: Date;
+  birthday: Date;
   jobTitle: string;
   liked: boolean;
-  supervisor: number;
+  supervisor: number | null;
 };
 
 type Props = RowData & {
@@ -26,7 +26,7 @@ export function TableRow({
   sex,
   email,
   phone,
-  birthDay,
+  birthday,
   jobTitle,
   liked,
   supervisor: supervisorIndex,
@@ -59,7 +59,7 @@ export function TableRow({
           <span>Phone</span>
           <span>{phone}</span>
           <span>Date of birth</span>
-          <span>{birthDay.toDateString()}</span>
+          <span>{birthday.toDateString()}</span>
           <span>Supervisor</span>
           {supervisor ? (
             <button

@@ -55,7 +55,7 @@ async function fetchTable(resolve) {
         sex: cols[4],
         email: cols[5],
         phone: cols[6],
-        birthDay: new Date(cols[7]),
+        birthday: new Date(cols[7]),
         jobTitle: cols[8],
         liked: false,
         supervisor,
@@ -119,7 +119,7 @@ function tableRow(dataRow) {
     ["Phone", "phone"],
     [
       "Date of birth",
-      "birthDay",
+      "birthday",
       (d, container) => {
         container.innerHTML = d.toDateString();
       },
@@ -188,7 +188,7 @@ async function sortTable(column) {
       "sex",
       "email",
       "phone",
-      "birthDay",
+      "birthday",
       "jobTitle",
       "liked",
     ][column];

@@ -9,7 +9,7 @@ function openEditModal(index) {
       continue;
     }
 
-    if (key === "birthDay") {
+    if (key === "birthday") {
       field.value = val.toISOString().slice(0, 10);
     } else {
       field.value = val;
@@ -57,14 +57,14 @@ function onEditModalSubmit(index) {
       const rowField = document.querySelector(`#${key}-field-${index}`);
 
       user[key] = formField.value;
-      if (key === "birthDay") {
+      if (key === "birthday") {
         user[key] = new Date(formField.value);
       } else if (key === "supervisor") {
         user[key] = parseInt(user[key]);
       }
 
       if (rowField) {
-        if (key === "birthDay") {
+        if (key === "birthday") {
           rowField.innerHTML = user[key].toDateString();
         } else if (key === "supervisor") {
           embedSupervisorButton(user[key], rowField);

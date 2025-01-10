@@ -70,8 +70,8 @@ function EditForm({ user, onSave }: FormProps) {
         <input value={workUser.userId} onChange={change("userId")} />
         <span>Supervisor</span>
         <input
-          value={workUser.supervisor}
-          onChange={change("supervisor", parseInt)}
+          value={workUser.supervisor || ""}
+          onChange={change("supervisor", (val) => (val ? parseInt(val) : null))}
         />
         <span>First name</span>
         <input value={workUser.firstName} onChange={change("firstName")} />
@@ -88,8 +88,8 @@ function EditForm({ user, onSave }: FormProps) {
         <span>Date of birth</span>
         <input
           type="date"
-          value={workUser.birthDay.toISOString().slice(0, 10)}
-          onChange={change("birthDay", (val) => new Date(val))}
+          value={workUser.birthday.toISOString().slice(0, 10)}
+          onChange={change("birthday", (val) => new Date(val))}
         />
         <input type="submit" value="Save" style={{ gridColumn: "1 / 3" }} />
       </form>
