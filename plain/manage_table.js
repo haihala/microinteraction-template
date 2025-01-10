@@ -171,7 +171,7 @@ async function sortTable(column) {
 }
 
 async function generateTable() {
-  const root = document.querySelector("main");
+  const root = document.querySelector("#people-container");
   const sortContainer = document.createElement("div");
 
   const sortOptions = [
