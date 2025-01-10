@@ -9,14 +9,17 @@ export type RowData = {
   birthDay: Date;
   jobTitle: string;
   liked: boolean;
+  supervisor: number;
 };
 
 type Props = RowData & {
   onLike: () => void;
   onEdit: () => void;
+  employees: RowData[];
 };
 
 export function TableRow({
+  index,
   userId,
   firstName,
   lastName,
@@ -26,13 +29,17 @@ export function TableRow({
   birthDay,
   jobTitle,
   liked,
+  supervisor: supervisorIndex,
   onLike,
   onEdit,
+  employees,
 }: Props) {
+  const supervisor = employees.find((e) => e.index === supervisorIndex);
+
   return (
-    <details style={{ marginBottom: "1rem" }}>
+    <details style={{ marginBottom: "1rem" }} id={`table-row-${index}`}>
       <summary>
-        {lastName}, {firstName}
+        Employee {index} - {lastName}, {firstName}
       </summary>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div
@@ -53,6 +60,21 @@ export function TableRow({
           <span>{phone}</span>
           <span>Date of birth</span>
           <span>{birthDay.toDateString()}</span>
+          <span>Supervisor</span>
+          {supervisor ? (
+            <button
+              onClick={() => {
+                document
+                  .querySelector(`#table-row-${supervisorIndex}`)
+                  ?.scrollIntoView();
+              }}
+            >
+              Employee {supervisor.index} - {supervisor.lastName},{" "}
+              {supervisor.firstName}
+            </button>
+          ) : (
+            "Nobody, they are at the top"
+          )}
         </div>
         <div
           style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}

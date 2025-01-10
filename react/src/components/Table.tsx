@@ -40,6 +40,21 @@ export function Table() {
             }
 
             const index = parseInt(cols[0]);
+            let supervisor = null;
+            // This is a chain.
+            // 1000 is the highest level of the organization and has no supervisor
+            // X00 are upper management, their supervisor is 1000, for example 500 -> 1000
+            // YX0 are lower management, their supervisor is (Y+1)00, for example 30 -> 100
+            // The rest are regular employees, their supervisor is the next lower manager, for example 32 -> 40
+            if (index === 1000) {
+              supervisor = null;
+            } else if (index % 100 === 0) {
+              supervisor = 1000;
+            } else if (index % 10 === 0) {
+              supervisor = index - (index % 100) + 100;
+            } else {
+              supervisor = index - (index % 10) + 10;
+            }
 
             const obj: RowData = {
               index,
@@ -52,6 +67,7 @@ export function Table() {
               birthDay: new Date(cols[7]),
               jobTitle: cols[8],
               liked: false,
+              supervisor,
             };
 
             return obj;
@@ -141,6 +157,7 @@ export function Table() {
                 )
               }
               onEdit={() => openEdit(rowProps.index)}
+              employees={rows}
             />
           </React.Fragment>
         ))}
