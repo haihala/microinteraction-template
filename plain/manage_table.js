@@ -37,9 +37,9 @@ async function getTable() {
     // Table data is stored in window to make sorting easier.
     return Promise.resolve(window.tableData);
   } else {
-    // This simulates loading time
+    // This simulates loading time, time in milliseconds
     return new Promise((resolve) => {
-      setTimeout(() => fetchTable(resolve), 2000);
+      setTimeout(() => fetchTable(resolve), 0);
     });
   }
 }

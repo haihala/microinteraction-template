@@ -57,7 +57,8 @@ export function Table() {
             return obj;
           }),
       );
-    }, 2000);
+      // Time in milliseconds
+    }, 0);
     return () => clearTimeout(timeout);
   }, []);
 
