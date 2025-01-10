@@ -1,3 +1,7 @@
+function formatEmployee(employee) {
+  return `Employee ${employee.index} - ${employee.lastName}, ${employee.firstName}`;
+}
+
 async function fetchTable(resolve) {
   window.tableData = (await (await fetch("/people-1000.csv")).text())
     .split("\n")
@@ -10,8 +14,26 @@ async function fetchTable(resolve) {
         cols = [...cols.slice(0, 8), line.match(/"(.*)"/)[1]];
       }
 
+      const index = parseInt(cols[0]);
+
+      let supervisor = null;
+      // This is a chain.
+      // 1000 is the highest level of the organization and has no supervisor
+      // X00 are upper management, their supervisor is 1000, for example 500 -> 1000
+      // YX0 are lower management, their supervisor is (Y+1)00, for example 30 -> 100
+      // The rest are regular employees, their supervisor is the next lower manager, for example 32 -> 40
+      if (index === 1000) {
+        supervisor = null;
+      } else if (index % 100 === 0) {
+        supervisor = 1000;
+      } else if (index % 10 === 0) {
+        supervisor = index - (index % 100) + 100;
+      } else {
+        supervisor = index - (index % 10) + 10;
+      }
+
       return {
-        index: parseInt(cols[0]),
+        index,
         userId: cols[1],
         firstName: cols[2],
         lastName: cols[3],
@@ -21,6 +43,7 @@ async function fetchTable(resolve) {
         birthDay: new Date(cols[7]),
         jobTitle: cols[8],
         liked: false,
+        supervisor,
       };
     });
 
@@ -59,34 +82,61 @@ function toggleLike(index) {
 }
 
 function tableRow(dataRow) {
-  const { index, firstName, lastName } = dataRow;
+  const { index } = dataRow;
 
   const details = document.createElement("details");
   details.id = `table-row-${index}`;
 
   const summary = document.createElement("summary");
   summary.id = `name-${index}`;
-  summary.innerHTML = `${lastName}, ${firstName}`;
+  summary.innerHTML = formatEmployee(dataRow);
   details.appendChild(summary);
 
   const wrapper = document.createElement("div");
   wrapper.classList.add("table-row-wrapper");
   const grid = document.createElement("div");
   grid.classList.add("table-row-data");
-  for (const [title, key, transformer] of [
+  for (const [title, key, embed] of [
     ["User id", "userId"],
     ["Job title", "jobTitle"],
     ["Sex", "sex"],
     ["Email", "email"],
     ["Phone", "phone"],
-    ["Date of birth", "birthDay", (d) => d.toDateString()],
+    [
+      "Date of birth",
+      "birthDay",
+      (d, container) => {
+        container.innerHTML = d.toDateString();
+      },
+    ],
+    [
+      "Supervisor",
+      "supervisor",
+      (supervisor, container) => {
+        const employee = window.tableData.find((e) => e.index === supervisor);
+        if (employee) {
+          const button = document.createElement("button");
+          button.onclick = () => {
+            document.querySelector(`#table-row-${supervisor}`).scrollIntoView();
+          };
+          button.innerHTML = formatEmployee(employee);
+          container.appendChild(button);
+        } else {
+          container.innerHTML = "Nobody, they are at the top";
+        }
+      },
+    ],
   ]) {
     const label = document.createElement("span");
     label.innerHTML = title;
     grid.appendChild(label);
 
     const val = document.createElement("span");
-    val.innerHTML = !transformer ? dataRow[key] : transformer(dataRow[key]);
+    if (!embed) {
+      val.innerHTML = dataRow[key];
+    } else {
+      embed(dataRow[key], val);
+    }
     val.id = `${key}-field-${index}`;
     grid.appendChild(val);
   }

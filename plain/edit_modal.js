@@ -71,8 +71,7 @@ function onEditModalSubmit(index) {
       }
     }
 
-    document.querySelector(`#name-${index}`).innerHTML =
-      `${user["lastName"]}, ${user["firstName"]}`;
+    document.querySelector(`#name-${index}`).innerHTML = formatEmployee(user);
   };
 }
 

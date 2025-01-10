@@ -75,11 +75,11 @@ details {
     gap: 0.5rem;
 }
 
-.like-button:after {
+.like-button::after {
     content: "♡";
 }
 
-.like-button.liked:after {
+.like-button.liked::after {
     content: "♥️";
 }
 
