@@ -52,10 +52,10 @@ export function Form() {
   type LabeledRadioButtonsProps = {
     name: keyof DataModel;
     label: string;
+    registerOpts?: RegisterOptions<DataModel>;
     options: {
       value: string;
       label: string;
-      registerOpts?: RegisterOptions<DataModel>;
     }[];
   };
 
@@ -63,18 +63,17 @@ export function Form() {
     name,
     label,
     options,
+    registerOpts,
   }: LabeledRadioButtonsProps) {
+    const opts = register(name, registerOpts);
+
     return (
       <>
         <label htmlFor={name}>{label}</label>
         <div>
-          {options.map(({ label, value, registerOpts }) => (
+          {options.map(({ label, value }) => (
             <React.Fragment key={value}>
-              <input
-                type="radio"
-                {...register(name, registerOpts)}
-                value={value}
-              />{" "}
+              <input type="radio" value={value} {...opts} />{" "}
               <label htmlFor={value} style={{ paddingRight: "1rem" }}>
                 {label}
               </label>{" "}
@@ -87,13 +86,11 @@ export function Form() {
 
   return (
     <>
-      <p style={{ fontSize: "2rem" }}>
-        {Object.keys(errors).length !== 0 ? (
-          <p style={{ color: "red" }}>Error in form</p>
-        ) : success ? (
-          <p style={{ color: "green" }}>Success!</p>
-        ) : null}
-      </p>
+      {Object.keys(errors).length !== 0 ? (
+        <p style={{ color: "red" }}>Error in form</p>
+      ) : success ? (
+        <p style={{ color: "green" }}>Success!</p>
+      ) : null}
       <form
         style={{
           display: "grid",
@@ -136,15 +133,36 @@ export function Form() {
         />
 
         <h2 style={twoColsWide}>Trivia time!</h2>
-        <LabeledInput name="mathTrivia" label="2X-1=5, X=?" />
-        <LabeledInput name="animalTrivia" label="What color are polar bears?" />
+        <LabeledInput
+          name="mathTrivia"
+          label="2X-1=5, X=?"
+          registerOpts={{
+            validate: (value) => parseInt(value as string) === 2,
+          }}
+        />
+        <LabeledInput
+          name="animalTrivia"
+          label="What color are polar bears?"
+          registerOpts={{
+            validate: (value) =>
+              (value as string).trim().toLowerCase() === "white",
+          }}
+        />
         <LabeledInput
           name="geographyTrivia"
           label="What is the capital of Italy?"
+          registerOpts={{
+            validate: (value) =>
+              (value as string).trim().toLowerCase() === "rome",
+          }}
         />
         <LabeledRadioButtons
           name="astronomyTrivia"
           label="Which planet has rings?"
+          registerOpts={{
+            validate: (value) =>
+              value && (value as string).trim().toLowerCase() === "saturn",
+          }}
           options={[
             { value: "sun", label: "The Sun" },
             { value: "saturn", label: "Saturn" },
