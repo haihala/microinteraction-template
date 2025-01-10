@@ -66,26 +66,26 @@ function EditForm({ user, onSave }: FormProps) {
         }}
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}
       >
-        <span>User id</span>
+        <label>User id</label>
         <input value={workUser.userId} onChange={change("userId")} />
-        <span>Supervisor</span>
+        <label>Supervisor</label>
         <input
           value={workUser.supervisor || ""}
           onChange={change("supervisor", (val) => (val ? parseInt(val) : null))}
         />
-        <span>First name</span>
+        <label>First name</label>
         <input value={workUser.firstName} onChange={change("firstName")} />
-        <span>Last name</span>
+        <label>Last name</label>
         <input value={workUser.lastName} onChange={change("lastName")} />
-        <span>Job title</span>
+        <label>Job title</label>
         <input value={workUser.jobTitle} onChange={change("jobTitle")} />
-        <span>Sex</span>
+        <label>Sex</label>
         <input value={workUser.sex} onChange={change("sex")} />
-        <span>Phone</span>
+        <label>Phone</label>
         <input value={workUser.phone} onChange={change("phone")} />
-        <span>Email</span>
+        <label>Email</label>
         <input value={workUser.email} onChange={change("email")} />
-        <span>Date of birth</span>
+        <label>Date of birth</label>
         <input
           type="date"
           value={workUser.birthday.toISOString().slice(0, 10)}
