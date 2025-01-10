@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
-    <link href="./css/style.css" rel="stylesheet" />
+    <link href="./style.css" rel="stylesheet" />
+    <script defer src="./form_page.js"></script>
   </head>
   <body>
     <header>
@@ -12,13 +13,15 @@
       <p>For demonstration purposes. <a href="./index.html">Table</a></p>
     </header>
     <main>
-      <h2>Fill out our form filling form</h2>
+      <p id="form-status"></p>
       <form>
+        <!--First part-->
+        <h2>Form about filling forms</h2>
         <label for="name">What is your name?</label>
         <input type="text" name="name" />
         <label for="birthday">What is your birthday?</label>
         <input type="date" name="birthday" />
-        <label for="handedness">Which is your dominant hand</label>
+        <label>Which is your dominant hand</label>
         <div>
           <input type="radio" name="handedness" value="left" />
           <label for="left">Left</label>
@@ -29,6 +32,32 @@
         <input type="checkbox" name="checkbox" />
         <label for="color">What is your favourite color?</label>
         <input type="color" name="color" />
+
+        <!--Second part-->
+        <h2>Trivia time!</h2>
+        <label for="mathTrivia">2X-1=5, X=?</label>
+        <input type="text" name="mathTrivia" />
+        <label for="animalTrivia">What color are polar bears?</label>
+        <input type="text" name="animalTrivia" />
+        <label for="geographyTrivia">What is the capital of Italy?</label>
+        <input type="text" name="geographyTrivia" />
+        <label>Which planet has rings?</label>
+        <div>
+          <input type="radio" name="astronomyTrivia" value="sun" />
+          <label for="sun">The Sun</label>
+          <input type="radio" name="astronomyTrivia" value="saturn" />
+          <label for="saturn">Saturn</label>
+          <input type="radio" name="astronomyTrivia" value="earth" />
+          <label for="earth">The Earth</label>
+          <input type="radio" name="astronomyTrivia" value="venus" />
+          <label for="venus">Venus</label>
+        </div>
+
+        <!--Last part-->
+        <h2>Final part</h2>
+        <label for="done">Are you done?</label>
+        <input type="checkbox" name="done" />
+        <input type="submit" value="Submit" />
       </form>
     </main>
     <footer>
